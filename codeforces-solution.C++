@@ -1073,6 +1073,1080 @@ int main() {
 
     return 0;
 }
+//                                  A. Shift Sort
+// time limit per test1 second
+// memory limit per test256 megabytes
+// You are given a binary string∗
+//  s
+//  of length n
+//  and you are allowed to perform the following operation any number of times (including zero):
+
+// Choose 3
+//  indices 1≤i<j<k≤n
+//  and right shift or left shift the values on si
+// , sj
+// , sk
+//  cyclically.
+// For the binary string 110110, if we choose i=1
+// , j=2
+// , k=3
+//  and perform a right shift cyclically, the string becomes 011110; if we choose i=4
+// , j=5
+// , k=6
+//  and perform a left shift cyclically, the string becomes 110101.
+
+// Determine the minimum number of operations required to sort the given binary string.
+
+// ∗
+// A binary string is a string that consists only of the characters 0 and 1.
+
+// Input
+// Each test contains multiple test cases. The first line contains the number of test cases t
+//  (1≤t≤100
+// ). The description of the test cases follows.
+
+// The first line of each test case contains a single integer n
+//  (3≤n≤100
+// ) — the length of the string.
+
+// The second line contains a binary string s
+//  of length n
+// .
+
+// Output
+// For each test case, output a single integer — the minimum number of operations required to sort the given binary string.
+
+// Example
+// InputCopy
+// 4
+// 3
+// 001
+// 4
+// 0110
+// 6
+// 110100
+// 6
+// 101011
+// OutputCopy
+// 0
+// 1
+// 2
+// 1
+// Note
+// For the first test case, the given string is already sorted. So, no operations are needed.
+
+// For the second test case, we can choose i=1
+// , j=2
+// , k=4
+//  and perform a right shift cyclically. The string becomes equal to 0011, which is sorted.
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int t;
+    cin >> t;
+    while (t--) {
+        int n;
+        string s;
+        cin >> n >> s;
+
+        int ones = 0;
+        for (char c : s) if (c == '1') ones++;
+
+        int z = n - ones;              
+        int ans = 0;
+        for (int i = 0; i < z; i++) {  
+            if (s[i] == '1') ans++;
+        }
+        cout << ans << "\n";
+    }
+    return 0;
+}
+
+//                                B. Villagers
+// time limit per test1 second
+// memory limit per test256 megabytes
+
+// Steve lives in a village with n
+//  other villagers. Unfortunately, due to disputes over the distribution of emeralds, none of those villagers are friends with any other villager. Furthermore, villager i
+//  initially has a grumpiness of gi
+// .
+
+// Steve can perform the following operation any number of times:
+
+// Select two villagers i
+//  and j
+//  and give them max(gi,gj)
+//  emeralds to share. Both of their grumpinesses decrease by min(gi,gj)
+// , and they become friends with each other if they weren't already.
+// Steve wishes to make every villager friends with every other villager (possibly through some intermediate friendships); that is, from any villager, you can follow a path of friendships to reach any other villager. Since he does not want to inflate the village economy too much, calculate the minimum number of emeralds he must give away to accomplish this.
+
+// Input
+// Each test contains multiple test cases. The first line contains the number of test cases t
+//  (1≤t≤104
+// ). The description of the test cases follows.
+
+// The first line of each test case contains a single integer n
+//  (2≤n≤2⋅105
+// ) — the number of villagers.
+
+// The second line of each test case contains n
+//  integers g1,g2,…,gn
+//  (1≤gi≤109
+// ) — the initial grumpiness of each villager.
+
+// It is guaranteed that the sum of n
+//  over all test cases does not exceed 2⋅105
+// .
+
+// Output
+// For each test case, output a single integer — the minimum number of emeralds Steve must give away to make everyone friends.
+
+// Example
+// InputCopy
+// 4
+// 2
+// 1 2
+// 4
+// 2 1 5 2
+// 5
+// 1000000000 1000000000 1000000000 1000000000 1000000000
+// 6
+// 3 1 4 1 5 9
+// OutputCopy
+// 2
+// 7
+// 3000000000
+// 14
+// Note
+// In the first test case, the only valid operation is i=1
+// , j=2
+// . Steve gives them max(1,2)=2
+//  emeralds, and they become friends.
+
+// In the second test case, one optimal sequence of operations is as follows:
+
+// Steve chooses i=1
+// , j=3
+// . He gives the villagers max(2,5)=5
+//  emeralds, and their grumpiness decreases by min(2,5)=2
+// . Now everyone's grumpiness is [0,1,3,2]
+// ;
+// Steve chooses i=2
+// , j=4
+// . He gives the villagers max(1,2)=2
+//  emeralds, and their grumpiness decreases by min(1,2)=1
+// . Now everyone's grumpiness is [0,0,3,1]
+// ;
+// Steve chooses i=1
+// , j=2
+// . He gives the villagers max(0,0)=0
+//  emeralds, and their grumpiness decreases by min(0,0)=0
+// . Now everyone's grumpiness is [0,0,3,1]
+// .
+// After this, the pairs of villagers (1,3)
+// , (2,4)
+//  and (1,2)
+//  are directly friends, and every other pair of villagers is connected by a chain of mutual friendships. It can be shown that Steve cannot spend fewer than 7
+//  emeralds to accomplish this.
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int t;
+    cin >> t;
+    while (t--) {
+        int n;
+        cin >> n;
+        vector<long long> a(n);
+        for (int i = 0; i < n; i++) cin >> a[i];
+
+        sort(a.begin(), a.end());
+
+        long long ans = 0;
+        for (int i = 1; i < n; i += 2) ans += a[i];
+
+        if (n % 2 == 1) ans += a[n - 1];
+
+        cout << ans << "\n";
+    }
+    return 0;
+}
+
+//                               A. Homework
+// time limit per test1 second
+// memory limit per test256 megabytes
+// Vlad and Dima have been assigned a task in school for their English class. They were given two strings a
+//  and b
+//  and asked to append all characters from b
+//  to string a
+//  in any order. The guys decided to divide the work between themselves and, after lengthy negotiations, determined who would add each character from string b
+//  to a
+// .
+
+// Due to his peculiarities, Vlad can only add characters to the beginning of the word, while Dima can only add them to the end. They add characters in the order they appear in string b
+// . Your task is to determine what string Vlad and Dima will end up with.
+
+// Input
+// Each test consists of several test cases. The first line contains a single integer t
+//  (1≤t≤1000
+// ) — the number of test cases. The description of the test cases follows.
+
+// The first line contains an integer n
+//  (1≤n≤10
+// ) — the length of the string a
+// .
+
+// The second line contains the string a
+// , consisting of lowercase letters of the English alphabet.
+
+// The third line contains an integer m
+//  (1≤m≤10
+// ) — the length of the strings b
+//  and c
+// .
+
+// The fourth line contains the string b
+// , consisting of lowercase letters of the English alphabet.
+
+// The fifth line contains the string c
+// , consisting of the characters 'V' and 'D' — the distribution of the characters of string b
+//  between Dima and Vlad. If ci
+//  = 'V', then the i
+// -th letter is added by Vlad; otherwise, it is added by Dima.
+
+// Output
+// For each test case, output the string that will result from Dima and Vlad's work.
+
+// Example
+// InputCopy
+// 4
+// 2
+// ot
+// 2
+// ad
+// DV
+// 3
+// efo
+// 7
+// rdcoecs
+// DVDVDVD
+// 3
+// aca
+// 4
+// bbaa
+// DVDV
+// 3
+// biz
+// 4
+// abon
+// VVDD
+// OutputCopy
+// dota
+// codeforces
+// abacaba
+// babizon
+// Note
+// In the first test case, there is initially a string ot
+// . Then Dima appends the character a
+//  to the end of the string, resulting in ota
+// , and Vlad appends the last character, resulting in dota
+// .
+
+// In the second test case, the string will change as follows: efo→efor→defor→deforc→odeforc→odeforce→codeforce→codeforces
+
+// In the third test case: aca→acab→bacab→bacaba→abacaba
+
+// In the fourth test case: biz→abiz→babiz→babizo→babizon
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int t;
+    cin >> t;
+    while (t--) {
+        int n, m;
+        string a, b, c;
+        cin >> n >> a;
+        cin >> m >> b;
+        cin >> c;
+
+        deque<char> dq;
+        for (char ch : a) dq.push_back(ch);
+
+        for (int i = 0; i < m; i++) {
+            if (c[i] == 'V') dq.push_front(b[i]);
+            else dq.push_back(b[i]); // 'D'
+        }
+
+        for (char ch : dq) cout << ch;
+        cout << "\n";
+    }
+    return 0;
+}
+
+
+//                              A. Letter Home
+// time limit per test1 second
+// memory limit per test256 megabytes
+// You are given an array of distinct integers x1,x2,…,xn
+//  and an integer s
+// .
+
+// Initially, you are at position pos=s
+//  on the X
+//  axis. In one step, you can perform exactly one of the following two actions:
+
+// Move from position pos
+//  to position pos+1
+// .
+// Move from position pos
+//  to position pos−1
+// .
+// A sequence of steps will be considered successful if, during the entire journey, you visit each position xi
+//  on the X
+//  axis at least once. Note that the initial position pos=s
+//  is also considered visited.
+
+// Your task is to determine the minimum number of steps in any successful sequence of steps.
+
+// Input
+// Each test consists of multiple test cases. The first line contains a single integer t
+//  (1≤t≤1000
+// ) — the number of test cases. The description of the test cases follows.
+
+// The first line of each test case contains two integers n
+//  and s
+//  (1≤n≤10
+// , 1≤s≤100
+// ) — the number of positions to visit and the starting position.
+
+// The second line of each test case contains n
+//  integers x1,x2,…,xn
+//  (1≤xi≤100
+// ). It is guaranteed that for all 1≤i<n
+// , it holds that xi<xi+1
+// .
+
+// Output
+// For each test case, output the minimum number of steps in any successful sequence of steps.
+
+// Example
+// InputCopy
+// 12
+// 1 1
+// 1
+// 1 2
+// 1
+// 1 1
+// 2
+// 2 1
+// 2 3
+// 2 2
+// 1 3
+// 2 3
+// 1 2
+// 3 1
+// 1 2 3
+// 3 2
+// 1 3 4
+// 3 3
+// 1 2 3
+// 4 3
+// 1 2 3 10
+// 5 5
+// 1 2 3 6 7
+// 6 6
+// 1 2 3 9 10 11
+// OutputCopy
+// 0
+// 1
+// 1
+// 2
+// 3
+// 2
+// 2
+// 4
+// 2
+// 11
+// 8
+// 15
+// Note
+// In the first test case, no steps need to be taken, so the only visited position will be 1
+// .
+
+// In the second test case, the following path can be taken: 2→1
+// . The number of steps is 1
+// .
+
+// In the third test case, the following path can be taken: 1→2
+// . The number of steps is 1
+// .
+
+// In the fifth test case, the following path can be taken: 2→1→2→3
+// . The number of steps is 3
+// .
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int t; 
+    cin >> t;
+    while (t--) {
+        int n, s;
+        cin >> n >> s;
+        vector<int> x(n);
+        for (int i = 0; i < n; i++) cin >> x[i];
+
+        int L = x[0], R = x[n-1];
+        int ans = (R - L) + min(abs(s - L), abs(s - R));
+        cout << ans << "\n";
+    }
+    return 0;
+}
+
+//                                B. Shrink
+// time limit per test2 seconds
+// memory limit per test256 megabytes
+// A shrink operation on an array a
+//  of size m
+//  is defined as follows:
+
+// Choose an index i
+//  (2≤i≤m−1
+// ) such that ai>ai−1
+//  and ai>ai+1
+// .
+// Remove ai
+//  from the array.
+// Define the score of a permutation∗
+//  p
+//  as the maximum number of times that you can perform the shrink operation on p
+// .
+
+// Yousef has given you a single integer n
+// . Construct a permutation p
+//  of length n
+//  with the maximum possible score. If there are multiple answers, you can output any of them.
+
+// ∗
+// A permutation of length n
+//  is an array consisting of n
+//  distinct integers from 1
+//  to n
+//  in arbitrary order. For example, [2,3,1,5,4]
+//  is a permutation, but [1,2,2]
+//  is not a permutation (2
+//  appears twice in the array), and [1,3,4]
+//  is also not a permutation (n=3
+//  but there is 4
+//  in the array).
+
+// Input
+// The first line of the input contains an integer t
+//  (1≤t≤103
+// ) — the number of test cases.
+
+// Each test case contains an integer n
+//  (3≤n≤2⋅105
+// ) — the size of the permutation.
+
+// It is guaranteed that the sum of n
+//  over all test cases does not exceed 2⋅105
+// .
+
+// Output
+// For each test case, output any permutation p1,p2,…,pn
+//  that maximizes the number of shrink operations.
+
+// Example
+// InputCopy
+// 2
+// 3
+// 6
+// OutputCopy
+// 1 3 2
+// 2 3 6 4 5 1
+// Note
+// In the first test case:
+
+// We choose p=[1,3,2]
+// .
+// Choose index 2
+// , and remove p2
+//  from the array. The array becomes p=[1,2]
+// .
+// It can be shown that the maximum number of operations we can perform is 1
+// . Another valid answer is p=[2,3,1]
+// .
+
+// In the second test case:
+
+// We choose p=[2,3,6,4,5,1]
+// .
+// Choose index 5
+// , and remove p5
+//  from the array. The array becomes p=[2,3,6,4,1]
+// .
+// Choose index 3
+// , and remove p3
+//  from the array. The array becomes p=[2,3,4,1]
+// .
+// Choose index 3
+// , and remove p3
+//  from the array. The array becomes p=[2,3,1]
+// .
+// Choose index 2
+// , and remove p2
+//  from the array. The array becomes p=[2,1]
+// .
+// The maximum number of operations we can perform is 4
+// . Any permutation with a score of 4
+//  is valid.
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int t;
+    cin >> t;
+    while (t--) {
+        int n;
+        cin >> n;
+
+        vector<int> ans;
+
+
+        for (int i = 2; i <= n; i += 2) ans.push_back(i);
+
+
+        int startOdd = (n % 2 == 1) ? n : n - 1;
+        for (int i = startOdd; i >= 1; i -= 2) ans.push_back(i);
+
+        for (int i = 0; i < n; i++) {
+            cout << ans[i] << (i + 1 == n ? '\n' : ' ');
+        }
+    }
+    return 0;
+}
+
+//    False Alarm
+// time limit per test1 second
+// memory limit per test256 megabytes
+// Yousef is at the entrance of a long hallway with n
+//  doors in a row, numbered from 1
+//  to n
+// . He needs to pass through all the doors from 1
+//  to n
+//  in order of numbering and reach the exit (past door n
+// ).
+
+// Each door can be open or closed. If a door is open, Yousef passes through it in 1
+//  second. If the door is closed, Yousef can't pass through it.
+
+// However, Yousef has a special button which he can use at most once at any moment. This button makes all closed doors become open for x
+//  seconds.
+
+// Your task is to determine if Yousef can pass through all the doors if he can use the button at most once.
+
+// Input
+// The first line of the input contains an integer t
+//  (1≤t≤1000
+// ) — the number of test cases.
+
+// The first line of each test case contains two integers n,x
+//  (1≤n,x≤10
+// ) — the number of doors and the number of seconds of the button, respectively.
+
+// The second line of each test case contains n
+//  integers a1,a2,...,an
+//  (ai∈{0,1}
+// ) — the state of each door. Open doors are represented by '0', while closed doors are represented by '1'.
+
+// It is guaranteed that each test case contains at least one closed door.
+
+// Output
+// For each test case, output "YES" if Yousef can reach the exit, and "NO" otherwise.
+
+// You can output the answer in any case (upper or lower). For example, the strings "yEs", "yes", "Yes", and "YES" will be recognized as positive responses.
+
+// Example
+// InputCopy
+// 7
+// 4 2
+// 0 1 1 0
+// 6 3
+// 1 0 1 1 0 0
+// 8 8
+// 1 1 1 0 0 1 1 1
+// 1 2
+// 1
+// 5 1
+// 1 0 1 0 1
+// 7 4
+// 0 0 0 1 1 0 1
+// 10 3
+// 0 1 0 0 1 0 0 1 0 0
+// OutputCopy
+// YES
+// NO
+// YES
+// YES
+// NO
+// YES
+// NO
+// Note
+// In the first test case, the optimal way is as follows:
+
+// At time 0
+// , the door is open, so Yousef passes.
+// At time 1
+// , the door is closed, Yousef can use the button now and pass through the door.
+// At time 2
+// , the button's effect is still on, so Yousef can still pass.
+// At time 3
+// , the button's effect has finished, but the door is open. Yousef passes and reaches the exit.
+// In the second test case, Yousef has a 3-second button, but he would need at least a 4-second button to reach the exit. Therefore, the answer is NO.
+
+// In the third test case, Yousef can turn on the button before starting to move. All the doors will stay open until he reaches the exit.
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int t;
+    cin >> t;
+    while (t--) {
+        int n, x;
+        cin >> n >> x;
+        vector<int> a(n);
+        for (int i = 0; i < n; i++) cin >> a[i];
+
+        int L = -1, R = -1;
+        for (int i = 0; i < n; i++) {
+            if (a[i] == 1) {
+                if (L == -1) L = i;
+                R = i;
+            }
+        }
+
+        int need = R - L + 1;         
+        cout << (need <= x ? "YES\n" : "NO\n");
+    }
+    return 0;
+}
+
+
+//  Race
+// time limit per test2 seconds
+// memory limit per test256 megabytes
+// Alice and Bob participate in a game TV show. When the game starts, the prize will be dropped to a certain point, and whoever gets to it first will get the prize.
+
+// Alice decided that she would start running from point a
+// . Bob, however, has not yet chosen his starting position.
+
+// Bob knows that the prize could drop either at point x
+//  or at point y
+// . He also knows that he can reach the prize faster than Alice if the distance from his starting position to the prize is strictly less than the distance from Alice's starting position to the prize. The distance between any two points c
+//  and d
+//  is calculated as |c−d|
+// .
+
+// Your task is to determine whether Bob can choose an integer point that is guarantee to get to the prize faster, regardless of where it appears (at point x
+//  or y
+// ). Bob can choose any integer point, except for a
+//  (in particular, he can choose to start in point x
+// , point y
+// , or any other point, but not a
+// ).
+
+// Input
+// The first line contains a single integer t
+//  (1≤t≤1000
+// ) — the number of test cases.
+
+// The only line of each test case contains three integers a
+// , x
+// , y
+//  (1≤a,x,y≤100
+// ). Points a
+// , x
+// , and y
+//  are pairwise distinct.
+
+// Output
+// For each test case, print "YES" (case insensitive) if Bob can choose an integer point that is guarantee to get to the prize faster, regardless of where it appears. Otherwise, print "NO" (case insensitive).
+
+// Example
+// InputCopy
+// 3
+// 1 3 4
+// 5 3 1
+// 3 1 5
+// OutputCopy
+// YES
+// YES
+// NO
+// Note
+// In the first example, Bob can choose point 4
+// . If the prize will be at point x
+// , then Bob's distance is |4−3|=1
+//  and Alice's distance is |1−3|=2
+// . If the prize will be at point y
+// , then Bob's distance is |4−4|=0
+//  and Alice's distance is |1−4|=3
+// .
+
+// In the second example, Bob can choose point 2
+// . If the prize will be at point x
+// , then Bob's distance is |2−3|=1
+//  and Alice's distance is |5−3|=2
+// . If the prize will be at point y
+// , then Bob's distance is |2−1|=1
+//  and Alice's distance is |5−1|=4
+// .
+
+// In the third example, Bob cannot choose a point to guarantee his victory.
+
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int t;
+    cin >> t;
+    while (t--) {
+        int a, x, y;
+        cin >> a >> x >> y;
+
+        int mn = min(x, y), mx = max(x, y);
+        if (mn < a && a < mx) cout << "NO\n";
+        else cout << "YES\n";
+    }
+    return 0;
+}
+
+
+// B. Cake Collection
+// time limit per test1 second
+// memory limit per test512 megabytes
+
+// Maple wants to bake some cakes for Chocola and Vanilla.
+
+// One day, she discovers n
+//  magical cake ovens. The i
+// -th oven bakes ai
+//  cakes every second. The cakes remain in their respective ovens until they are collected.
+
+// At the end of each second, she may teleport to any oven (including the one she is currently at) and collect all the cakes that have accumulated in that oven up to that point.
+
+// Your task is to determine the maximum number of cakes Maple can collect in m
+//  seconds.
+
+// Input
+// Each test contains multiple test cases. The first line contains the number of test cases t
+//  (1≤t≤1000
+// ). The description of the test cases follows.
+
+// The first line of each test case contains two integers n
+//  and m
+//  (1≤n≤105
+// , 1≤m≤108
+// ) — the number of magical ovens and the number of seconds during which Maple will collect cakes.
+
+// The second line of each test case contains n
+//  integers a1,a2,…,an
+//  (1≤ai≤105
+// ) — the number of cakes the i
+// -th oven bakes every second.
+
+// It is guaranteed that the sum of n
+//  over all test cases does not exceed 2⋅105
+// .
+
+// Output
+// For each test case, output a single integer representing the maximum number of cakes Maple can collect in m
+//  seconds.
+
+// Example
+// InputCopy
+// 3
+// 3 4
+// 1 2 3
+// 3 2
+// 1 2 3
+// 1 1000
+// 100000
+// OutputCopy
+// 20
+// 8
+// 100000000
+// Note
+// For the first test case, one optimal solution is as follows:
+
+// At the end of the first second, the ovens contain 1
+// , 2
+// , and 3
+//  cakes respectively. Maple teleports to oven 3
+//  and collects all 3
+//  cakes. Oven 3
+//  now has 0
+//  cakes remaining.
+// At the end of the second second, the ovens contain 2
+// , 4
+// , and 3
+//  cakes respectively. Maple teleports to oven 1
+//  and collects all 2
+//  cakes. Oven 1
+//  now has 0
+//  cakes remaining.
+// At the end of the third second, the ovens contain 1
+// , 6
+// , and 6
+//  cakes respectively. Maple teleports to oven 2
+//  and collects all 6
+//  cakes. Oven 2
+//  now has 0
+//  cakes remaining.
+// At the end of the fourth second, the ovens contain 2
+// , 2
+// , and 9
+//  cakes respectively. Maple teleports to oven 3
+//  and collects all 9
+//  cakes. Oven 3
+//  now has 0
+//  cakes remaining.
+// In total, Maple collects 3+2+6+9=20
+//  cakes.
+
+// For the second test case, one optimal solution is as follows:
+
+// At the end of the first second, the ovens contain 1
+// , 2
+// , and 3
+//  cakes respectively. Maple teleports to oven 2
+//  and collects all 2
+//  cakes. Oven 2
+//  now has 0
+//  cakes remaining.
+// At the end of the second second, the ovens contain 2
+// , 2
+// , and 6
+//  cakes respectively. Maple teleports to oven 3
+//  and collects all 6
+//  cakes. Oven 3
+//  now has 0
+//  cakes remaining.
+// In total, Maple collects 2+6=8
+//  cakes.
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int t;
+    cin >> t;
+    while (t--) {
+        int n;
+        long long m;
+        cin >> n >> m;
+
+        vector<long long> a(n);
+        for (int i = 0; i < n; i++) cin >> a[i];
+
+        sort(a.begin(), a.end());
+
+        long long k = min<long long>(n, m);
+        long long startTime = m - k + 1; 
+        long long ans = 0;
+
+        for (long long j = 0; j < k; j++) {
+            long long rate = a[n - k + j];      
+            long long time = startTime + j;     
+            ans += rate * time;
+        }
+
+        cout << ans << "\n";
+    }
+    return 0;
+}
+
+
+// A. Lever
+// time limit per test2 seconds
+// memory limit per test256 megabytes
+// In Divergent Universe, The Lever iterates itself given two arrays a
+//  and b
+//  of length n
+// . In each iteration, The Lever will do the following:
+
+// Choose a random index i
+//  such that ai>bi
+// . Then, decrease ai
+//  by 1
+// . If there does not exist such i
+// , ignore this step.
+// Choose a random index i
+//  such that ai<bi
+// . Then, increase ai
+//  by 1
+// . If there does not exist such i
+// , ignore this step.
+// After each iteration, the Lever will check if step 1
+//  is ignored, and if so, it will end its iteration.
+
+// You're given the two arrays. Find the number of iterations that the Lever does. It can be shown this number is fixed over all possibilities of random indices that The Lever can choose for each step.
+
+// Input
+// Each test contains multiple test cases. The first line contains the number of test cases t
+//  (1≤t≤104
+// ). The description of the test cases follows.
+
+// The first line of each test case contains one integer n
+//  (1≤n≤10
+// ).
+
+// The second line of each test case contains n
+//  integers a1,a2,…,an
+//  (1≤ai≤10
+// ).
+
+// The third line of each test case contains n
+//  integers b1,b2,…,bn
+//  (1≤bi≤10
+// ).
+
+// Output
+// For each test case, output one integer — the number of iterations that the Lever does.
+
+// Example
+// InputCopy
+// 4
+// 2
+// 7 3
+// 5 6
+// 3
+// 3 1 4
+// 3 1 4
+// 1
+// 10
+// 1
+// 6
+// 1 1 4 5 1 4
+// 1 9 1 9 8 1
+// OutputCopy
+// 3
+// 1
+// 10
+// 7
+// Note
+// In the first sample case:
+
+// In the first iteration, the Lever decreases a1
+//  by 1
+//  and increases a2
+//  by 1
+// , and a
+//  becomes [6,4]
+// .
+
+// In the second iteration, the Lever decreases a1
+//  by 1
+//  and increases a2
+//  by 1
+// , and a
+//  becomes [5,5]
+// .
+
+// In the third iteration, the Lever increases a2
+//  by 1
+// , and a
+//  becomes [5,6]
+// . Since it fails to decrease an element, its iteration ends. Therefore, the answer is 3
+// .
+
+// In the second sample case, the Lever does nothing in its first iteration, and thus it does only one iteration.
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int t;
+    cin >> t;
+    while (t--) {
+        int n;
+        cin >> n;
+
+        vector<int> a(n), b(n);
+        for (int i = 0; i < n; i++) cin >> a[i];
+        for (int i = 0; i < n; i++) cin >> b[i];
+
+        int iterations = 0;
+
+        while (true) {
+            iterations++;
+
+            bool decreased = false;
+
+د
+            for (int i = 0; i < n; i++) {
+                if (a[i] > b[i]) {
+                    a[i]--;
+                    decreased = true;
+                    break;
+                }
+            }
+
+            for (int i = 0; i < n; i++) {
+                if (a[i] < b[i]) {
+                    a[i]++;
+                    break;
+                }
+            }
+
+=
+            if (!decreased) break;
+        }
+
+        cout << iterations << "\n";
+    }
+    return 0;
+}
+
 
 
 
